@@ -3,7 +3,7 @@ import { createAction, props } from '@ngrx/store';
 export interface Task {
   id: number;
   title: string;
-  status: 'pending' | 'completed';
+  completed: boolean;
 }
 
 // Load Tasks

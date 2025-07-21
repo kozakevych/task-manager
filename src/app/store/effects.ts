@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import * as TaskActions from './actions';
@@ -7,20 +8,20 @@ import { Task } from './actions';
 import { Store } from '@ngrx/store';
 import { State } from './reducer';
 import { selectAllTasks } from './selectors';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class TaskEffects {
   private actions$ = inject(Actions);
   private store: Store<State> = inject(Store);
 
-  constructor() {}
+  constructor(public http: HttpClient) {}
 
   loadTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TaskActions.loadTasks),
       mergeMap(() =>
-        // Replace with actual API call
-        of([{ id: 1, title: 'Sample Task', status: 'pending' as const }]).pipe(
+        this.http.get<Task[]>(`${environment.apiUrl}/tasks`).pipe(
           map(tasks => TaskActions.loadTasksSuccess({ tasks })),
           catchError(error => of(TaskActions.loadTasksFailure({ error })))
         )
