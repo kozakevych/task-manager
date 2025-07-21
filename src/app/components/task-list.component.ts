@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
   template: `
     <mat-list>
       <mat-list-item *ngFor="let task of tasks">
-        <div style="width:100%">
+        <div style="width: 100%">
           <span [ngClass]="{ 'completed': task.completed }">{{ task.title }}</span>
           <button mat-icon-button color="primary" (click)="edit.emit(task)"><mat-icon>edit</mat-icon></button>
           <button mat-icon-button color="warn" (click)="delete.emit(task.id)"><mat-icon>delete</mat-icon></button>
@@ -27,5 +27,5 @@ import { MatButtonModule } from '@angular/material/button';
 export class TaskListComponent {
   @Input() tasks: Task[] | null = [];
   @Output() edit = new EventEmitter<Task>();
-  @Output() delete = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<string>();
 }

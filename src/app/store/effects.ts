@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import * as TaskActions from './actions';
-import { Task } from './actions';
+import { Task, NewTask } from './actions';
 import { Store } from '@ngrx/store';
 import { State } from './reducer';
 import { selectAllTasks } from './selectors';
@@ -33,9 +33,10 @@ export class TaskEffects {
     this.actions$.pipe(
       ofType(TaskActions.addTask),
       withLatestFrom(this.store.select(selectAllTasks)),
-      mergeMap(([{ task }, tasks]) => {
-        const newTask: Task = { ...task, id: tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1 };
-        return of(newTask).pipe(
+      mergeMap(([{ task }]) => {
+        console.log('Adding task:', task);
+        const newTask: NewTask = { ...task};
+        return this.http.post<Task>(`${environment.apiUrl}/tasks`, newTask).pipe(
           map(task => TaskActions.addTaskSuccess({ task })),
           catchError(error => of(TaskActions.addTaskFailure({ error })))
         );
@@ -47,7 +48,7 @@ export class TaskEffects {
     this.actions$.pipe(
       ofType(TaskActions.updateTask),
       mergeMap(({ task }) =>
-        of(task).pipe(
+        this.http.put<Task>(`${environment.apiUrl}/tasks/${task.id}`, task).pipe(
           map(task => TaskActions.updateTaskSuccess({ task })),
           catchError(error => of(TaskActions.updateTaskFailure({ error })))
         )
@@ -59,8 +60,8 @@ export class TaskEffects {
     this.actions$.pipe(
       ofType(TaskActions.deleteTask),
       mergeMap(({ id }) =>
-        of(id).pipe(
-          map(id => TaskActions.deleteTaskSuccess({ id })),
+        this.http.delete<string>(`${environment.apiUrl}/tasks/${id}`).pipe(
+          map(_ => TaskActions.deleteTaskSuccess({ id })),
           catchError(error => of(TaskActions.deleteTaskFailure({ error })))
         )
       )

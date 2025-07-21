@@ -39,7 +39,7 @@ export class App {
     this.selectedTask = task;
   }
 
-  onDeleteTask(id: number) {
+  onDeleteTask(id: string) {
     this.store.dispatch(TaskActions.deleteTask({ id }));
     if (this.selectedTask && this.selectedTask.id === id) {
       this.selectedTask = null;

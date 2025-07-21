@@ -1,7 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 
 export interface Task {
-  id: number;
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface NewTask extends Omit<Task, 'id'> {
   title: string;
   completed: boolean;
 }
@@ -22,6 +27,6 @@ export const updateTaskSuccess = createAction('[Task] Update Task Success', prop
 export const updateTaskFailure = createAction('[Task] Update Task Failure', props<{ error: any }>());
 
 // Delete Task
-export const deleteTask = createAction('[Task] Delete Task', props<{ id: number }>());
-export const deleteTaskSuccess = createAction('[Task] Delete Task Success', props<{ id: number }>());
+export const deleteTask = createAction('[Task] Delete Task', props<{ id: string }>());
+export const deleteTaskSuccess = createAction('[Task] Delete Task Success', props<{ id: string }>());
 export const deleteTaskFailure = createAction('[Task] Delete Task Failure', props<{ error: any }>());
