@@ -1,17 +1,1 @@
-<main class="main">
-  <h1>Task Manager</h1>
-  <task-form
-    [initialTask]="selectedTask"
-    [submitLabel]="selectedTask ? 'Update' : 'Add'"
-    (save)="onSaveTask($event)"
-    (cancel)="onCancelEdit()"
-  ></task-form>
-  <task-list
-    [tasks]="tasks$ | async"
-    (edit)="onEditTask($event)"
-    (delete)="onDeleteTask($event)"
-  ></task-list>
-</main>
-
-
 <router-outlet />
